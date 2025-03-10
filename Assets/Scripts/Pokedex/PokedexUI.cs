@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -10,15 +9,18 @@ public class PokedexUI : MonoBehaviour
     public Transform content;             
     public ScrollRect scrollRect;        
 
-    private PokeAPIDownloader pokedexLoader; 
     private int currentBatchIndex = 0;    
     private const int batchSize = 50;   
 
     void Start()
     {
-        pokedexLoader = FindObjectOfType<PokeAPIDownloader>();
         scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
         StartCoroutine(LoadPokedexUI());
+    }
+
+    private void OnEnable()
+    {
+        LocalDatabase.Instance.RefreshCaughtPokemon();
     }
 
     IEnumerator LoadPokedexUI()
@@ -44,21 +46,16 @@ public class PokedexUI : MonoBehaviour
         int endIndex = Mathf.Min(startIndex + count, LocalDatabase.Instance.pokedex.Count);
         for (int i = startIndex; i < endIndex; i++)
         {
-            
             CreatePokemonCard(LocalDatabase.Instance.pokedex[i]);
         }
     }
     void CreatePokemonCard(PokemonData pokemon)
     {
         GameObject card = Instantiate(pokemonCardPrefab, content);
-
-        Text[] textElements = card.GetComponentsInChildren<Text>();
-        textElements[0].text = pokemon.name.ToUpper();
-
-        StartCoroutine(LoadSprite(card.transform, pokemon.sprite));
+        StartCoroutine(LoadSprite(card.transform, pokemon.sprite, pokemon.id));
     }
 
-    IEnumerator LoadSprite(Transform cardTransform, string spriteUrl)
+    IEnumerator LoadSprite(Transform cardTransform, string spriteUrl, int id)
     {
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(spriteUrl);
         yield return request.SendWebRequest();
@@ -68,6 +65,7 @@ public class PokedexUI : MonoBehaviour
             Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
             Image image = cardTransform.GetComponentsInChildren<Image>()[1];
             image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            image.color = LocalDatabase.Instance.caughtPokemon.Contains(id) ? Color.white : Color.black;
         }
         else
         {
