@@ -20,12 +20,10 @@ public class LocalDatabase : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-
     public PokemonData GetPokemon(int id)
     {
         return pokedex[id];
     }
-
     public void RefreshCaughtPokemon()
     {
         string caughtData = PlayerPrefs.GetString("CaughtPokemon", "");

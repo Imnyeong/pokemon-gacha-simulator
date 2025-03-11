@@ -15,15 +15,12 @@ public class GachaView : MonoBehaviour
         controller = _controller;
         gachaButton.onClick.AddListener(controller.OnGachaButtonClicked);
     }
-
     public void UpdatePokemonUI(PokemonData pokemon)
     {
         pokemonNameText.text = pokemon.name;
         pokemonTypeText.text = string.Join(", ", pokemon.types);
         StartCoroutine(LoadSprite(pokemon.sprite, pokemonImage));
     }
-
-
     private IEnumerator LoadSprite(string url, Image image)
     {
         using (UnityEngine.Networking.UnityWebRequest request = UnityEngine.Networking.UnityWebRequestTexture.GetTexture(url))

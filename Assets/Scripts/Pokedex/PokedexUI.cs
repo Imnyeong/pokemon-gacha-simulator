@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -17,12 +18,10 @@ public class PokedexUI : MonoBehaviour
         scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
         StartCoroutine(LoadPokedexUI());
     }
-
     private void OnEnable()
     {
         LocalDatabase.Instance.RefreshCaughtPokemon();
     }
-
     IEnumerator LoadPokedexUI()
     {
         while (LocalDatabase.Instance.pokedex.Count == 0)
@@ -31,7 +30,6 @@ public class PokedexUI : MonoBehaviour
         }
         LoadPokemonBatch(currentBatchIndex, batchSize);
     }
-
     void OnScrollValueChanged(Vector2 scrollPos)
     {
         if (scrollPos.y <= 0.1f) 
@@ -40,7 +38,6 @@ public class PokedexUI : MonoBehaviour
             LoadPokemonBatch(currentBatchIndex, batchSize);
         }
     }
-
     void LoadPokemonBatch(int startIndex, int count)
     {
         int endIndex = Mathf.Min(startIndex + count, LocalDatabase.Instance.pokedex.Count);
@@ -52,24 +49,41 @@ public class PokedexUI : MonoBehaviour
     void CreatePokemonCard(PokemonData pokemon)
     {
         GameObject card = Instantiate(pokemonCardPrefab, content);
-        StartCoroutine(LoadSprite(card.transform, pokemon.sprite, pokemon.id));
+        LoadSpriteAsync(card.transform, pokemon.sprite, pokemon.id);
     }
-
-    IEnumerator LoadSprite(Transform cardTransform, string spriteUrl, int id)
+    async void LoadSpriteAsync(Transform cardTransform, string spriteUrl, int id)
     {
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(spriteUrl);
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
+        Texture2D texture = await DownloadTextureAsync(spriteUrl);
+        if (texture != null)
         {
-            Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
             Image image = cardTransform.GetComponentsInChildren<Image>()[1];
             image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             image.color = LocalDatabase.Instance.caughtPokemon.Contains(id) ? Color.white : Color.black;
         }
         else
         {
-            Debug.LogError("❌ 스프라이트 로딩 실패: " + request.error);
+            Debug.LogError($"스프라이트 로딩 실패: {spriteUrl}");
+        }
+    }
+    async Task<Texture2D> DownloadTextureAsync(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
+        {
+            var operation = request.SendWebRequest();
+            while (!operation.isDone)
+            {
+                await Task.Yield();
+            }
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                return ((DownloadHandlerTexture)request.downloadHandler).texture;
+            }
+            else
+            {
+                Debug.LogError($"텍스처 다운로드 실패: {request.error}");
+                return null;
+            }
         }
     }
 }
