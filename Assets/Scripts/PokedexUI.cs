@@ -18,8 +18,9 @@ public class PokedexUI : MonoBehaviour
         scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
         StartCoroutine(LoadPokedexUI());
     }
-    private void OnEnable()
+    public void OnClickButton()
     {
+        gameObject.SetActive(!gameObject.activeSelf);
         LocalDatabase.Instance.RefreshCaughtPokemon();
     }
     IEnumerator LoadPokedexUI()

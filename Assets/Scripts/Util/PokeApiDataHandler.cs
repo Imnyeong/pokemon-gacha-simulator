@@ -68,6 +68,7 @@ public class PokeApiDataHandler : MonoBehaviour
         File.WriteAllText(localDataFilePath, saveJson);
 
         LocalDatabase.Instance.pokedex = pokemonList;
+        SceneManager.LoadScene("InGame");
     }
     private async Task<PokemonData> GetPokemonDataAsync(int id)
     {
@@ -132,6 +133,7 @@ public class PokeApiDataHandler : MonoBehaviour
             }
         }
         currentData++;
+        progressText.text = $"{((float)currentData / TOTAL_POKEMONS * 100).ToString("F2")}%({currentData}/{TOTAL_POKEMONS})";
         progressBar.value = (float)currentData / TOTAL_POKEMONS;
 
         return new PokemonData
