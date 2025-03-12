@@ -10,6 +10,7 @@ public class GachaManager : MonoBehaviour
     public Text pokemonNameText;
     public Text pokemonTypeText;
     public Button gachaButton;
+    public GachaTicketManager gachaTicketManager;
 
     private const int TOTAL_POKEMONS = 1008;
 
@@ -20,8 +21,15 @@ public class GachaManager : MonoBehaviour
 
     private void OnGachaButtonClicked()
     {
-        FetchPokemonData();
-        StartCoroutine(WaitButton());
+        if(gachaTicketManager.UseTicket())
+        {
+            FetchPokemonData();
+            StartCoroutine(WaitButton());
+        }
+        else 
+        {
+            Debug.Log("티켓 없음");
+        }
     }
     private IEnumerator WaitButton()
     {
