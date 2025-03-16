@@ -60,6 +60,8 @@ public class PokedexUI : MonoBehaviour
             Image image = cardTransform.GetComponentsInChildren<Image>()[1];
             image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             image.color = LocalDatabase.Instance.caughtPokemon.Contains(id) ? Color.white : Color.black;
+            Text text = cardTransform.GetComponentInChildren<Text>();
+            text.text = LocalDatabase.Instance.caughtPokemon.Contains(id) ? LocalDatabase.Instance.GetPokemon(id - 1).name : "???";
         }
         else
         {
