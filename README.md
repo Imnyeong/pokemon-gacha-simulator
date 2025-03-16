@@ -18,7 +18,7 @@ Open API인 poke API의 데이터를 활용하여 뽑기 시스템과 도감 수
 - PlayerPrefs로 단말기에 정보 저장, 불러오기 구현
 
 
-## Script로 보는 핵심 기능
+## Script로 보는 핵심 기능 📰
 
 ### Json 파일로 프로젝트에 저장
 ```ruby
@@ -32,6 +32,7 @@ else
     await DownloadAndSavePokedexDataAsync();
 }
 ```
+
 한 번 내려받은 데이터는 Json 파일로 저장 되어있기 때문에 API 호출 없이 로컬 정보로 불러오고, 최초 실행 시에는 경로에 Json 파일이 없기 때문에 API를 호출합니다.
 
 ### API 병렬 처리
@@ -83,7 +84,7 @@ foreach (var type in apiResponse.types)
 
 pokeAPI에서 Sprite 정보와 한국어 이름 정보를 둘 다 가져오려면 한 포켓몬 당 API를 2번 호출해야하고 타입 정보의 경우 고정된 정보이기 때문에 위와 같은 방법으로 구현했습니다.
 
-## Sample Image
+## Sample Image 🎮
 
 <img src="https://github.com/user-attachments/assets/43c20b01-eaf4-494b-b725-d3ec59c4888c" width="270" height="480"/>  
 <img src="https://github.com/user-attachments/assets/31617010-b56d-4a74-82e0-c11ae94d1320" width="270" height="480"/>
