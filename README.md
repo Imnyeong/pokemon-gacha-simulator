@@ -1,4 +1,5 @@
 ﻿### POKEMON GACHA SIMULATOR
+![icon](https://img.shields.io/badge/Unity-100000?style=for-the-badge&logo=unity&logoColor=white) ![icon](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
 
 ## 개요 📝
 Open API인 poke API의 데이터를 활용하여 뽑기 시스템과 도감 수집 기능을 구현한 시뮬레이터
@@ -81,3 +82,8 @@ foreach (var type in apiResponse.types)
 ```
 
 pokeAPI에서 Sprite 정보와 한국어 이름 정보를 둘 다 가져오려면 한 포켓몬 당 API를 2번 호출해야하고 타입 정보의 경우 고정된 정보이기 때문에 위와 같은 방법으로 구현했습니다.
+
+## Sample Image
+
+<img src="https://github.com/user-attachments/assets/43c20b01-eaf4-494b-b725-d3ec59c4888c" width="270" height="480"/>  
+<img src="https://github.com/user-attachments/assets/31617010-b56d-4a74-82e0-c11ae94d1320" width="270" height="480"/>
